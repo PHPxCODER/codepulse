@@ -1,7 +1,7 @@
 // app/dashboard/layout.tsx
 import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth/next";
-import { authOptions } from "../api/auth/[...nextauth]/route";
+import { authOptions } from "@/auth.config";
 import Sidebar from "@/components/dashboard/sidebar";
 import Header from "@/components/dashboard/header";
 import { ThemeProvider } from "@/components/theme-provider";

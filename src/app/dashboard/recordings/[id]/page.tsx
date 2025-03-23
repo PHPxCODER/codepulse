@@ -1,13 +1,13 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // app/dashboard/recordings/[id]/page.tsx
 import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth/next";
 import { PrismaClient } from "@prisma/client";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { authOptions } from "@/auth.config";
 import SessionPlayer from "@/components/session/session-player";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { ArrowLeft, Share } from "lucide-react";
-import { SVGProps } from "react";
 
 const prisma = new PrismaClient();
 
