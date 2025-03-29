@@ -18,10 +18,20 @@ model User {
   sessions      Session[]
   projects      Project[]
   sessions_member SessionMember[]
+  // New additions for CodeCraft functionality
+  codeExecutions CodeExecution[]
+  snippets       Snippet[]
+  stars          Star[]
+  comments       Comment[]
+  isPro          Boolean   @default(false)
+  proSince       DateTime? 
+  stripeCustomerId String?
+  stripeSessionId  String?
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 }
 
+// Keep existing tables...
 model Account {
   id                      String  @id @default(cuid())
   userId                  String
@@ -35,7 +45,7 @@ model Account {
   scope                   String?
   id_token                String? @db.Text
   session_state           String?
-  refresh_token_expires_in Int?   // Add this line
+  refresh_token_expires_in Int?
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -108,4 +118,64 @@ model SessionMember {
   leftAt    DateTime?
 
   @@unique([userId, sessionId])
+}
+
+// New models for CodeCraft functionality
+
+model CodeExecution {
+  id        String   @id @default(cuid())
+  language  String
+  code      String   @db.Text
+  output    String?  @db.Text
+  error     String?  @db.Text
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+}
+
+model Snippet {
+  id        String    @id @default(cuid())
+  title     String
+  language  String
+  code      String    @db.Text
+  userName  String    // Denormalized for performance
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  comments  Comment[]
+  stars     Star[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@index([userId])
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  content   String   @db.Text
+  userName  String   // Denormalized for performance
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  snippetId String
+  snippet   Snippet  @relation(fields: [snippetId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@index([snippetId])
+}
+
+model Star {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  snippetId String
+  snippet   Snippet  @relation(fields: [snippetId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([userId, snippetId])
+  @@index([userId])
+  @@index([snippetId])
 }

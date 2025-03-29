@@ -10,6 +10,7 @@ declare module "next-auth" {
     role: string;
     phone: string;
     createdAt: Date;
+    isPro: boolean;
     updatedAt: Date;
     image: string | null;
   }
@@ -22,6 +23,7 @@ declare module "next-auth" {
       name: string;
       role: string;
       phone: string;
+      isPro: boolean;
       createdAt: Date;
       updatedAt: Date;
       image: string | null;
