@@ -1,4 +1,3 @@
-// app/api/files/[id]/route.ts
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
 import { PrismaClient } from "@prisma/client";
